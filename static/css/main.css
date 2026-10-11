@@ -1,0 +1,52 @@
+:root{
+  --bg:#fdf4f5; --card:#fff; --ink:#2b1217; --muted:#7a6168; --line:#f1dfe2;
+  --brand:#be123c; --brand-2:#e11d48; --accent:#fff;
+  --low:#16a34a; --mod:#d97706; --high:#dc2626;
+  --r:14px; --shadow:0 1px 2px rgba(120,20,40,.06),0 8px 24px rgba(120,20,40,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.topbar{background:linear-gradient(90deg,#9f1239,#e11d48);position:sticky;top:0;z-index:5}
+.topbar-in{display:flex;justify-content:space-between;align-items:center;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:#fff}
+.brand svg{color:var(--accent)}
+.tag{font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.2);padding:5px 11px;border-radius:99px}
+.hero{padding:36px 0 22px}
+.hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px);letter-spacing:-.02em}
+.hero p{margin:0;max-width:680px;color:var(--muted);font-size:16px}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:24px}
+fieldset{border:0;margin:0 0 24px;padding:0}
+legend{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;margin-bottom:14px;padding:0}
+.n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 16px}
+label{display:block;font-size:13px;font-weight:600;color:#4a3238}
+label small{font-weight:400;color:var(--muted);margin-left:4px}
+input,select{font:inherit;font-size:15px;color:var(--ink);background:#fffafa;border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%;margin-top:6px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:0;border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(225,29,72,.18);background:#fff}
+.actions{display:flex;gap:12px;margin-top:6px}
+.btn{font:inherit;font-weight:600;font-size:15px;border:0;border-radius:10px;padding:13px 22px;cursor:pointer;background:var(--brand);color:#fff;flex:1;transition:background .15s,transform .05s}
+.btn:hover{background:#9f1239} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:#fff;color:var(--muted);border:1px solid var(--line);flex:0 0 auto}
+.btn.ghost:hover{background:#fff1f2}
+.side{display:flex;flex-direction:column;gap:22px;position:sticky;top:82px}
+.result h2,.stats h3{margin:0 0 14px;font-size:16px}
+.placeholder{text-align:center;color:var(--muted);padding:14px 4px}
+.placeholder svg{color:#fda4af}
+.badge{display:inline-block;font-weight:700;font-size:13px;padding:6px 12px;border-radius:99px;color:#fff;margin-bottom:16px}
+.gauge{height:12px;background:#fde8eb;border-radius:99px;overflow:hidden}
+.bar{height:100%;width:0;border-radius:99px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.pct{margin:14px 0 6px;font-size:34px;font-weight:800;letter-spacing:-.02em}
+.pct small{display:block;font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0}
+.msg{margin:0;font-size:14px;color:#4a3238}
+.low .badge,.low .bar{background:var(--low)} .moderate .badge,.moderate .bar{background:var(--mod)} .high .badge,.high .bar{background:var(--high)}
+.error{color:var(--high);font-size:14px;font-weight:600;margin:0}
+.sub{margin:-8px 0 14px;font-size:12px;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpis div{background:#fff5f6;border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpis b{display:block;font-size:20px;color:var(--brand)} .kpis span{font-size:12px;color:var(--muted)}
+.disclaimer{margin:26px 0 0;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;font-size:13px;color:#7c2d12}
+.foot{text-align:center;color:var(--muted);font-size:13px;padding:30px 20px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.side{position:static}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:18px}}

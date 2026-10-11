@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CardioCheck | Heart Disease Risk Predictor</title>
+  <meta name="description" content="Machine-learning heart disease risk estimator trained on the UCI Heart Disease dataset.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.1C.9 8.6 2.7 5 6.2 5c2 0 3.3 1 3.8 2 .5-1 1.9-2 3.8-2 3.5 0 5.3 3.6 3.8 6.9C19.5 16.4 12 21 12 21z"/></svg>
+        <span>CardioCheck</span>
+      </div>
+      <span class="tag">ML Risk Estimator</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Heart Disease Risk Prediction</h1>
+      <p>Enter a patient's clinical measurements to estimate the likelihood of heart disease using a Logistic Regression model trained on the UCI Heart Disease dataset.</p>
+    </section>
+
+    <div class="layout">
+      <form id="form" class="card" novalidate>
+        <fieldset>
+          <legend><span class="n">1</span> Patient</legend>
+          <div class="grid">
+            <label>Age <small>years</small>
+              <input type="number" name="age" min="1" max="120" value="55" required></label>
+            <label>Sex
+              <select name="sex"><option value="1">Male</option><option value="0">Female</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="n">2</span> Vitals &amp; Blood Tests</legend>
+          <div class="grid">
+            <label>Resting blood pressure <small>mm Hg</small>
+              <input type="number" name="trestbps" min="60" max="260" value="130" required></label>
+            <label>Cholesterol <small>mg/dl</small>
+              <input type="number" name="chol" min="80" max="700" value="240" required></label>
+            <label>Max heart rate achieved <small>bpm</small>
+              <input type="number" name="thalach" min="50" max="250" value="150" required></label>
+            <label>Fasting blood sugar
+              <select name="fbs"><option value="0">≤ 120 mg/dl</option><option value="1">&gt; 120 mg/dl</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="n">3</span> Symptoms &amp; Clinical Tests</legend>
+          <div class="grid">
+            <label>Chest pain type
+              <select name="cp">
+                <option value="0">Typical angina</option>
+                <option value="1">Atypical angina</option>
+                <option value="2">Non-anginal pain</option>
+                <option value="3">Asymptomatic</option>
+              </select></label>
+            <label>Exercise-induced angina
+              <select name="exang"><option value="0">No</option><option value="1">Yes</option></select></label>
+            <label>Resting ECG
+              <select name="restecg">
+                <option value="0">Normal</option>
+                <option value="1">ST-T wave abnormality</option>
+                <option value="2">Left ventricular hypertrophy</option>
+              </select></label>
+            <label>ST depression <small>oldpeak</small>
+              <input type="number" name="oldpeak" min="0" max="10" step="0.1" value="1.0" required></label>
+            <label>ST slope
+              <select name="slope">
+                <option value="0">Upsloping</option>
+                <option value="1" selected>Flat</option>
+                <option value="2">Downsloping</option>
+              </select></label>
+            <label>Major vessels colored <small>fluoroscopy</small>
+              <select name="ca"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+            <label>Thalassemia
+              <select name="thal">
+                <option value="2" selected>Normal</option>
+                <option value="1">Fixed defect</option>
+                <option value="3">Reversible defect</option>
+                <option value="0">Unknown</option>
+              </select></label>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" id="btn" class="btn">Predict Risk</button>
+          <button type="reset" id="reset" class="btn ghost">Reset</button>
+        </div>
+      </form>
+
+      <aside class="side">
+        <div id="result" class="card result idle">
+          <h2>Result</h2>
+          <div class="placeholder">
+            <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.1C.9 8.6 2.7 5 6.2 5c2 0 3.3 1 3.8 2 .5-1 1.9-2 3.8-2 3.5 0 5.3 3.6 3.8 6.9C19.5 16.4 12 21 12 21z"/></svg>
+            <p>Fill in the form and press <b>Predict Risk</b> to see the estimate.</p>
+          </div>
+          <div class="out" hidden>
+            <div class="badge" id="badge"></div>
+            <div class="gauge"><div class="bar" id="bar"></div></div>
+            <p class="pct"><span id="pct">0</span>% <small>estimated probability of heart disease</small></p>
+            <p class="msg" id="msg"></p>
+          </div>
+          <p class="error" id="error" hidden></p>
+        </div>
+
+        {% if metrics %}
+        <div class="card stats">
+          <h3>Model performance</h3>
+          <p class="sub">{{ metrics.model }} · held-out test set ({{ metrics.test_size }} patients)</p>
+          <div class="kpis">
+            <div><b>{{ '%.1f'|format(metrics.accuracy * 100) }}%</b><span>Accuracy</span></div>
+            <div><b>{{ '%.1f'|format(metrics.precision * 100) }}%</b><span>Precision</span></div>
+            <div><b>{{ '%.1f'|format(metrics.recall * 100) }}%</b><span>Recall</span></div>
+            <div><b>{{ '%.3f'|format(metrics.auc) }}</b><span>ROC AUC</span></div>
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+
+    <p class="disclaimer"><b>Disclaimer:</b> This tool is for educational purposes only and is not a medical diagnosis. Always consult a qualified healthcare professional.</p>
+  </main>
+
+  <footer class="foot">CardioCheck · Built with Flask &amp; scikit-learn · UCI Heart Disease dataset</footer>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
